@@ -9,7 +9,8 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPFound
 @view_config(route_name='index',
              renderer='templates/index.mako')
 def index (request):
-    entry=Article.add_all(request)#发表时间排序
+    entry=Article.get_all(request)#发表时间排序
+    #entry=request.dbsession.query(Article).order_by(Article.date).all()
     userid=authenticated_userid(request)  #返回已认证的用户,如果为空则未登录
     if not entry:
         return HTTPNotFound
@@ -41,7 +42,6 @@ def blog_create(request):#添加
     form=BlogCreateForm(request.POST)
     if request.method == 'POST' and form.validate():
         form.populate_obj(entry)
-        entry.date=datetime.now()
         request.dbsession.add(entry)
         entry.update_cache(request)#更新缓存
         return HTTPFound(location=request.route_url('index'))

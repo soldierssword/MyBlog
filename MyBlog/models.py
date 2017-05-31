@@ -3,7 +3,7 @@ from pyramid.security import Allow, Everyone, Authenticated
 import zope.sqlalchemy
 import rediscon
 import cPickle
-
+from sqlalchemy.sql import func
 from sqlalchemy import (
     Column,
     Integer,
@@ -33,7 +33,7 @@ class Article(Base):
     uid = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(UnicodeText)
     body = Column(UnicodeText)
-    date = Column(DateTime)
+    date = Column(DateTime,default=func.now())
     @classmethod
     def add_all(cls,request):
         all = request.dbsession.query(Article).order_by(Article.date).all()
