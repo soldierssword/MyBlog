@@ -78,9 +78,8 @@ def blog_delete(request):
 def blog_view(request):#查看
     #request.GET.get('id', -1)
     blog_id = int(request.GET.get('uid', -1))
-    entrys=Article.add_all(request)
-    filter(lambda x:x.uid==blog_id,entrys)
-    entry=entrys.pop()
+    entrys=Article.get_all(request)
+    entry =filter(lambda x:x.uid==blog_id,entrys).pop()
     if not entry:
         return HTTPNotFound()
     return {'entry': entry}
